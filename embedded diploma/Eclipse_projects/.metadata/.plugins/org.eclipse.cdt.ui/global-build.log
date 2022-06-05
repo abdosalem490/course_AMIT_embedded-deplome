@@ -1,0 +1,255 @@
+20:01:44 **** Build of configuration Debug for project DIO ****
+make all 
+Building file: ../ADC_prog.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=16000000UL -MMD -MP -MF"ADC_prog.d" -MT"ADC_prog.o" -c -o "ADC_prog.o" "../ADC_prog.c"
+Finished building: ../ADC_prog.c
+ 
+Building file: ../CLCD_prog.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=16000000UL -MMD -MP -MF"CLCD_prog.d" -MT"CLCD_prog.o" -c -o "CLCD_prog.o" "../CLCD_prog.c"
+In file included from ../CLCD_prog.c:11:
+c:/users/abdo/downloads/drive-download-20210929t192809z-001/sdk_win_64/sdk_win_64/sdk_win_64/winavr/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+Finished building: ../CLCD_prog.c
+ 
+Building file: ../DIO_prog.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=16000000UL -MMD -MP -MF"DIO_prog.d" -MT"DIO_prog.o" -c -o "DIO_prog.o" "../DIO_prog.c"
+Finished building: ../DIO_prog.c
+ 
+Building file: ../EXTI_prog.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=16000000UL -MMD -MP -MF"EXTI_prog.d" -MT"EXTI_prog.o" -c -o "EXTI_prog.o" "../EXTI_prog.c"
+Finished building: ../EXTI_prog.c
+ 
+Building file: ../GIE_prog.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=16000000UL -MMD -MP -MF"GIE_prog.d" -MT"GIE_prog.o" -c -o "GIE_prog.o" "../GIE_prog.c"
+Finished building: ../GIE_prog.c
+ 
+Building file: ../KPD_prog.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=16000000UL -MMD -MP -MF"KPD_prog.d" -MT"KPD_prog.o" -c -o "KPD_prog.o" "../KPD_prog.c"
+Finished building: ../KPD_prog.c
+ 
+Building file: ../LED_prog.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=16000000UL -MMD -MP -MF"LED_prog.d" -MT"LED_prog.o" -c -o "LED_prog.o" "../LED_prog.c"
+Finished building: ../LED_prog.c
+ 
+Building file: ../PORT_prog.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=16000000UL -MMD -MP -MF"PORT_prog.d" -MT"PORT_prog.o" -c -o "PORT_prog.o" "../PORT_prog.c"
+Finished building: ../PORT_prog.c
+ 
+Building file: ../SPI_prog.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=16000000UL -MMD -MP -MF"SPI_prog.d" -MT"SPI_prog.o" -c -o "SPI_prog.o" "../SPI_prog.c"
+Finished building: ../SPI_prog.c
+ 
+Building file: ../SSD_prog.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=16000000UL -MMD -MP -MF"SSD_prog.d" -MT"SSD_prog.o" -c -o "SSD_prog.o" "../SSD_prog.c"
+Finished building: ../SSD_prog.c
+ 
+Building file: ../Switch_prog.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=16000000UL -MMD -MP -MF"Switch_prog.d" -MT"Switch_prog.o" -c -o "Switch_prog.o" "../Switch_prog.c"
+Finished building: ../Switch_prog.c
+ 
+Building file: ../TIMER_prog.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=16000000UL -MMD -MP -MF"TIMER_prog.d" -MT"TIMER_prog.o" -c -o "TIMER_prog.o" "../TIMER_prog.c"
+Finished building: ../TIMER_prog.c
+ 
+Building file: ../TWI_prog.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=16000000UL -MMD -MP -MF"TWI_prog.d" -MT"TWI_prog.o" -c -o "TWI_prog.o" "../TWI_prog.c"
+In file included from ../TWI_prog.c:10:
+c:/users/abdo/downloads/drive-download-20210929t192809z-001/sdk_win_64/sdk_win_64/sdk_win_64/winavr/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+Finished building: ../TWI_prog.c
+ 
+Building file: ../UART_prog.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=16000000UL -MMD -MP -MF"UART_prog.d" -MT"UART_prog.o" -c -o "UART_prog.o" "../UART_prog.c"
+Finished building: ../UART_prog.c
+ 
+Building file: ../main.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=16000000UL -MMD -MP -MF"main.d" -MT"main.o" -c -o "main.o" "../main.c"
+In file included from ../main.c:1:
+c:/users/abdo/downloads/drive-download-20210929t192809z-001/sdk_win_64/sdk_win_64/sdk_win_64/winavr/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+../main.c:76: warning: return type of 'main' is not 'int'
+Finished building: ../main.c
+ 
+Building target: DIO.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,DIO.map -mmcu=atmega32 -o "DIO.elf"  ./ADC_prog.o ./CLCD_prog.o ./DIO_prog.o ./EXTI_prog.o ./GIE_prog.o ./KPD_prog.o ./LED_prog.o ./PORT_prog.o ./SPI_prog.o ./SSD_prog.o ./Switch_prog.o ./TIMER_prog.o ./TWI_prog.o ./UART_prog.o ./main.o   
+Finished building target: DIO.elf
+ 
+Invoking: AVR Create Extended Listing
+avr-objdump -h -S DIO.elf  >"DIO.lss"
+Finished building: DIO.lss
+ 
+Create Flash image (ihex format)
+avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex DIO.elf  "DIO.hex"
+Finished building: DIO.hex
+ 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega32 DIO.elf
+AVR Memory Usage
+----------------
+Device: atmega32
+
+Program:   11952 bytes (36.5% Full)
+(.text + .data + .bootloader)
+
+Data:         57 bytes (2.8% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+20:05:27 **** Incremental Build of configuration Debug for project DIO ****
+make all 
+Building file: ../TWI_prog.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=16000000UL -MMD -MP -MF"TWI_prog.d" -MT"TWI_prog.o" -c -o "TWI_prog.o" "../TWI_prog.c"
+In file included from ../TWI_prog.c:10:
+c:/users/abdo/downloads/drive-download-20210929t192809z-001/sdk_win_64/sdk_win_64/sdk_win_64/winavr/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+Finished building: ../TWI_prog.c
+ 
+Building target: DIO.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,DIO.map -mmcu=atmega32 -o "DIO.elf"  ./ADC_prog.o ./CLCD_prog.o ./DIO_prog.o ./EXTI_prog.o ./GIE_prog.o ./KPD_prog.o ./LED_prog.o ./PORT_prog.o ./SPI_prog.o ./SSD_prog.o ./Switch_prog.o ./TIMER_prog.o ./TWI_prog.o ./UART_prog.o ./main.o   
+Finished building target: DIO.elf
+ 
+Invoking: AVR Create Extended Listing
+avr-objdump -h -S DIO.elf  >"DIO.lss"
+Finished building: DIO.lss
+ 
+Create Flash image (ihex format)
+avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex DIO.elf  "DIO.hex"
+Finished building: DIO.hex
+ 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega32 DIO.elf
+AVR Memory Usage
+----------------
+Device: atmega32
+
+Program:   11976 bytes (36.5% Full)
+(.text + .data + .bootloader)
+
+Data:         57 bytes (2.8% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+20:05:28 **** Incremental Build of configuration Debug for project DIO2 ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega32 DIO2.elf
+AVR Memory Usage
+----------------
+Device: atmega32
+
+Program:   11026 bytes (33.6% Full)
+(.text + .data + .bootloader)
+
+Data:         57 bytes (2.8% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+20:05:28 **** Incremental Build of configuration Debug for project SW_ICU ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega32 SW_ICU.elf
+AVR Memory Usage
+----------------
+Device: atmega32
+
+Program:    8020 bytes (24.5% Full)
+(.text + .data + .bootloader)
+
+Data:         23 bytes (1.1% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+20:05:54 **** Incremental Build of configuration Debug for project DIO ****
+make all 
+Building file: ../main.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=16000000UL -MMD -MP -MF"main.d" -MT"main.o" -c -o "main.o" "../main.c"
+In file included from ../main.c:1:
+c:/users/abdo/downloads/drive-download-20210929t192809z-001/sdk_win_64/sdk_win_64/sdk_win_64/winavr/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+../main.c:76: warning: return type of 'main' is not 'int'
+Finished building: ../main.c
+ 
+Building target: DIO.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,DIO.map -mmcu=atmega32 -o "DIO.elf"  ./ADC_prog.o ./CLCD_prog.o ./DIO_prog.o ./EXTI_prog.o ./GIE_prog.o ./KPD_prog.o ./LED_prog.o ./PORT_prog.o ./SPI_prog.o ./SSD_prog.o ./Switch_prog.o ./TIMER_prog.o ./TWI_prog.o ./UART_prog.o ./main.o   
+Finished building target: DIO.elf
+ 
+Invoking: AVR Create Extended Listing
+avr-objdump -h -S DIO.elf  >"DIO.lss"
+Finished building: DIO.lss
+ 
+Create Flash image (ihex format)
+avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex DIO.elf  "DIO.hex"
+Finished building: DIO.hex
+ 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega32 DIO.elf
+AVR Memory Usage
+----------------
+Device: atmega32
+
+Program:   11982 bytes (36.6% Full)
+(.text + .data + .bootloader)
+
+Data:         57 bytes (2.8% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+20:05:55 **** Incremental Build of configuration Debug for project DIO2 ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega32 DIO2.elf
+AVR Memory Usage
+----------------
+Device: atmega32
+
+Program:   11026 bytes (33.6% Full)
+(.text + .data + .bootloader)
+
+Data:         57 bytes (2.8% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+20:05:55 **** Incremental Build of configuration Debug for project SW_ICU ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega32 SW_ICU.elf
+AVR Memory Usage
+----------------
+Device: atmega32
+
+Program:    8020 bytes (24.5% Full)
+(.text + .data + .bootloader)
+
+Data:         23 bytes (1.1% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 

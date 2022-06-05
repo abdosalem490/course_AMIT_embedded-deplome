@@ -1,0 +1,25 @@
+/*******************************************************************************/
+/*******************************************************************************/
+/*************************	Author: Abdo salm	********************************/
+/*************************  Date: 30/10/2021	********************************/
+/*************************  Layer: MCAL			********************************/
+/*************************  Version: 1.00		********************************/
+/*******************************************************************************/
+/*******************************************************************************/
+#ifndef ADC_CONFIG_H_
+#define ADC_CONFIG_H_
+/*Choose your reference voltage options are : 1- AREF
+ * 											  2- AVCC
+ * 											  3- INTERNAL_2560mV*/
+#define ADC_u8_REF_SELECTION		AVCC
+
+/*Choose your resolution options are : 		  1- EIGHT_BIT
+ * 											  2- TEN_BIT*/
+#define ADC_u8_RESOLUTION			EIGHT_BIT
+
+
+/*Choose your ADC initial state options are : 1- ENABLED
+ * 											  2- DISABLED*/
+#define ADC_u8_ENABLE_INIT_STATE	ENABLED
+
+#endif

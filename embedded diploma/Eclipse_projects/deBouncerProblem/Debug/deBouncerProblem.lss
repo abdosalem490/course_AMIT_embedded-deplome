@@ -1,0 +1,331 @@
+
+deBouncerProblem.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000216  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .stab         00000474  00000000  00000000  0000026c  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  2 .stabstr      00000844  00000000  00000000  000006e0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   8:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  10:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  14:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  18:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  1c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  20:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  24:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  28:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  2c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  30:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  34:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  38:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  3c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  40:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  44:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  48:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  4c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  50:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+  60:	0e 94 36 00 	call	0x6c	; 0x6c <main>
+  64:	0c 94 09 01 	jmp	0x212	; 0x212 <_exit>
+
+00000068 <__bad_interrupt>:
+  68:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000006c <main>:
+#include<avr/io.h>
+#include"MATH_BTT.h"
+int main(){
+  6c:	df 93       	push	r29
+  6e:	cf 93       	push	r28
+  70:	cd b7       	in	r28, 0x3d	; 61
+  72:	de b7       	in	r29, 0x3e	; 62
+  74:	27 97       	sbiw	r28, 0x07	; 7
+  76:	0f b6       	in	r0, 0x3f	; 63
+  78:	f8 94       	cli
+  7a:	de bf       	out	0x3e, r29	; 62
+  7c:	0f be       	out	0x3f, r0	; 63
+  7e:	cd bf       	out	0x3d, r28	; 61
+	SET_BIT(DDRC,2); //LED 0
+  80:	a4 e3       	ldi	r26, 0x34	; 52
+  82:	b0 e0       	ldi	r27, 0x00	; 0
+  84:	e4 e3       	ldi	r30, 0x34	; 52
+  86:	f0 e0       	ldi	r31, 0x00	; 0
+  88:	80 81       	ld	r24, Z
+  8a:	84 60       	ori	r24, 0x04	; 4
+  8c:	8c 93       	st	X, r24
+	SET_BIT(DDRC,7); //LED 1
+  8e:	a4 e3       	ldi	r26, 0x34	; 52
+  90:	b0 e0       	ldi	r27, 0x00	; 0
+  92:	e4 e3       	ldi	r30, 0x34	; 52
+  94:	f0 e0       	ldi	r31, 0x00	; 0
+  96:	80 81       	ld	r24, Z
+  98:	80 68       	ori	r24, 0x80	; 128
+  9a:	8c 93       	st	X, r24
+	SET_BIT(DDRD,3); //LED 2
+  9c:	a1 e3       	ldi	r26, 0x31	; 49
+  9e:	b0 e0       	ldi	r27, 0x00	; 0
+  a0:	e1 e3       	ldi	r30, 0x31	; 49
+  a2:	f0 e0       	ldi	r31, 0x00	; 0
+  a4:	80 81       	ld	r24, Z
+  a6:	88 60       	ori	r24, 0x08	; 8
+  a8:	8c 93       	st	X, r24
+	CLR_BIT(PINB,0); //Button
+  aa:	a6 e3       	ldi	r26, 0x36	; 54
+  ac:	b0 e0       	ldi	r27, 0x00	; 0
+  ae:	e6 e3       	ldi	r30, 0x36	; 54
+  b0:	f0 e0       	ldi	r31, 0x00	; 0
+  b2:	80 81       	ld	r24, Z
+  b4:	8e 7f       	andi	r24, 0xFE	; 254
+  b6:	8c 93       	st	X, r24
+	unsigned char led = 0;
+  b8:	1f 82       	std	Y+7, r1	; 0x07
+	unsigned char counter = 0;
+  ba:	1e 82       	std	Y+6, r1	; 0x06
+	unsigned char isClicked = 0;
+  bc:	1d 82       	std	Y+5, r1	; 0x05
+	while(1){
+		for(int i = 0; i < 30000 ; i++){
+  be:	1c 82       	std	Y+4, r1	; 0x04
+  c0:	1b 82       	std	Y+3, r1	; 0x03
+  c2:	13 c0       	rjmp	.+38     	; 0xea <main+0x7e>
+			if(GET_BIT(PINB,0) == 1){
+  c4:	e6 e3       	ldi	r30, 0x36	; 54
+  c6:	f0 e0       	ldi	r31, 0x00	; 0
+  c8:	80 81       	ld	r24, Z
+  ca:	88 2f       	mov	r24, r24
+  cc:	90 e0       	ldi	r25, 0x00	; 0
+  ce:	81 70       	andi	r24, 0x01	; 1
+  d0:	90 70       	andi	r25, 0x00	; 0
+  d2:	88 23       	and	r24, r24
+  d4:	41 f0       	breq	.+16     	; 0xe6 <main+0x7a>
+				isClicked = 1;
+  d6:	81 e0       	ldi	r24, 0x01	; 1
+  d8:	8d 83       	std	Y+5, r24	; 0x05
+	CLR_BIT(PINB,0); //Button
+	unsigned char led = 0;
+	unsigned char counter = 0;
+	unsigned char isClicked = 0;
+	while(1){
+		for(int i = 0; i < 30000 ; i++){
+  da:	8b 81       	ldd	r24, Y+3	; 0x03
+  dc:	9c 81       	ldd	r25, Y+4	; 0x04
+  de:	01 96       	adiw	r24, 0x01	; 1
+  e0:	9c 83       	std	Y+4, r25	; 0x04
+  e2:	8b 83       	std	Y+3, r24	; 0x03
+  e4:	02 c0       	rjmp	.+4      	; 0xea <main+0x7e>
+			if(GET_BIT(PINB,0) == 1){
+				isClicked = 1;
+			}else{
+				isClicked = 0;
+  e6:	1d 82       	std	Y+5, r1	; 0x05
+  e8:	06 c0       	rjmp	.+12     	; 0xf6 <main+0x8a>
+	CLR_BIT(PINB,0); //Button
+	unsigned char led = 0;
+	unsigned char counter = 0;
+	unsigned char isClicked = 0;
+	while(1){
+		for(int i = 0; i < 30000 ; i++){
+  ea:	8b 81       	ldd	r24, Y+3	; 0x03
+  ec:	9c 81       	ldd	r25, Y+4	; 0x04
+  ee:	25 e7       	ldi	r18, 0x75	; 117
+  f0:	80 33       	cpi	r24, 0x30	; 48
+  f2:	92 07       	cpc	r25, r18
+  f4:	3c f3       	brlt	.-50     	; 0xc4 <main+0x58>
+			}else{
+				isClicked = 0;
+				break;
+			}
+		}
+		if(isClicked == 1){
+  f6:	8d 81       	ldd	r24, Y+5	; 0x05
+  f8:	81 30       	cpi	r24, 0x01	; 1
+  fa:	d1 f4       	brne	.+52     	; 0x130 <main+0xc4>
+			counter = (counter + 1) % 3;
+  fc:	8e 81       	ldd	r24, Y+6	; 0x06
+  fe:	88 2f       	mov	r24, r24
+ 100:	90 e0       	ldi	r25, 0x00	; 0
+ 102:	01 96       	adiw	r24, 0x01	; 1
+ 104:	23 e0       	ldi	r18, 0x03	; 3
+ 106:	30 e0       	ldi	r19, 0x00	; 0
+ 108:	b9 01       	movw	r22, r18
+ 10a:	0e 94 e2 00 	call	0x1c4	; 0x1c4 <__divmodhi4>
+ 10e:	8e 83       	std	Y+6, r24	; 0x06
+			led = 0;
+ 110:	1f 82       	std	Y+7, r1	; 0x07
+			SET_BIT(led,counter);
+ 112:	8e 81       	ldd	r24, Y+6	; 0x06
+ 114:	28 2f       	mov	r18, r24
+ 116:	30 e0       	ldi	r19, 0x00	; 0
+ 118:	81 e0       	ldi	r24, 0x01	; 1
+ 11a:	90 e0       	ldi	r25, 0x00	; 0
+ 11c:	02 2e       	mov	r0, r18
+ 11e:	02 c0       	rjmp	.+4      	; 0x124 <main+0xb8>
+ 120:	88 0f       	add	r24, r24
+ 122:	99 1f       	adc	r25, r25
+ 124:	0a 94       	dec	r0
+ 126:	e2 f7       	brpl	.-8      	; 0x120 <main+0xb4>
+ 128:	98 2f       	mov	r25, r24
+ 12a:	8f 81       	ldd	r24, Y+7	; 0x07
+ 12c:	89 2b       	or	r24, r25
+ 12e:	8f 83       	std	Y+7, r24	; 0x07
+		}
+		for(int i = 0; i < 2500 ; i++){
+ 130:	1a 82       	std	Y+2, r1	; 0x02
+ 132:	19 82       	std	Y+1, r1	; 0x01
+ 134:	3f c0       	rjmp	.+126    	; 0x1b4 <main+0x148>
+			ASSIGN_BIT(PORTC,2,GET_BIT(led,0));
+ 136:	a5 e3       	ldi	r26, 0x35	; 53
+ 138:	b0 e0       	ldi	r27, 0x00	; 0
+ 13a:	e5 e3       	ldi	r30, 0x35	; 53
+ 13c:	f0 e0       	ldi	r31, 0x00	; 0
+ 13e:	80 81       	ld	r24, Z
+ 140:	28 2f       	mov	r18, r24
+ 142:	2b 7f       	andi	r18, 0xFB	; 251
+ 144:	8f 81       	ldd	r24, Y+7	; 0x07
+ 146:	88 2f       	mov	r24, r24
+ 148:	90 e0       	ldi	r25, 0x00	; 0
+ 14a:	81 70       	andi	r24, 0x01	; 1
+ 14c:	90 70       	andi	r25, 0x00	; 0
+ 14e:	88 0f       	add	r24, r24
+ 150:	99 1f       	adc	r25, r25
+ 152:	88 0f       	add	r24, r24
+ 154:	99 1f       	adc	r25, r25
+ 156:	82 2b       	or	r24, r18
+ 158:	8c 93       	st	X, r24
+			ASSIGN_BIT(PORTC,7,GET_BIT(led,1));
+ 15a:	a5 e3       	ldi	r26, 0x35	; 53
+ 15c:	b0 e0       	ldi	r27, 0x00	; 0
+ 15e:	e5 e3       	ldi	r30, 0x35	; 53
+ 160:	f0 e0       	ldi	r31, 0x00	; 0
+ 162:	80 81       	ld	r24, Z
+ 164:	28 2f       	mov	r18, r24
+ 166:	2f 77       	andi	r18, 0x7F	; 127
+ 168:	8f 81       	ldd	r24, Y+7	; 0x07
+ 16a:	86 95       	lsr	r24
+ 16c:	88 2f       	mov	r24, r24
+ 16e:	90 e0       	ldi	r25, 0x00	; 0
+ 170:	96 95       	lsr	r25
+ 172:	98 2f       	mov	r25, r24
+ 174:	88 27       	eor	r24, r24
+ 176:	97 95       	ror	r25
+ 178:	87 95       	ror	r24
+ 17a:	82 2b       	or	r24, r18
+ 17c:	8c 93       	st	X, r24
+			ASSIGN_BIT(PORTD,3,GET_BIT(led,2));
+ 17e:	a2 e3       	ldi	r26, 0x32	; 50
+ 180:	b0 e0       	ldi	r27, 0x00	; 0
+ 182:	e2 e3       	ldi	r30, 0x32	; 50
+ 184:	f0 e0       	ldi	r31, 0x00	; 0
+ 186:	80 81       	ld	r24, Z
+ 188:	28 2f       	mov	r18, r24
+ 18a:	27 7f       	andi	r18, 0xF7	; 247
+ 18c:	8f 81       	ldd	r24, Y+7	; 0x07
+ 18e:	86 95       	lsr	r24
+ 190:	86 95       	lsr	r24
+ 192:	88 2f       	mov	r24, r24
+ 194:	90 e0       	ldi	r25, 0x00	; 0
+ 196:	81 70       	andi	r24, 0x01	; 1
+ 198:	90 70       	andi	r25, 0x00	; 0
+ 19a:	88 0f       	add	r24, r24
+ 19c:	99 1f       	adc	r25, r25
+ 19e:	88 0f       	add	r24, r24
+ 1a0:	99 1f       	adc	r25, r25
+ 1a2:	88 0f       	add	r24, r24
+ 1a4:	99 1f       	adc	r25, r25
+ 1a6:	82 2b       	or	r24, r18
+ 1a8:	8c 93       	st	X, r24
+		if(isClicked == 1){
+			counter = (counter + 1) % 3;
+			led = 0;
+			SET_BIT(led,counter);
+		}
+		for(int i = 0; i < 2500 ; i++){
+ 1aa:	89 81       	ldd	r24, Y+1	; 0x01
+ 1ac:	9a 81       	ldd	r25, Y+2	; 0x02
+ 1ae:	01 96       	adiw	r24, 0x01	; 1
+ 1b0:	9a 83       	std	Y+2, r25	; 0x02
+ 1b2:	89 83       	std	Y+1, r24	; 0x01
+ 1b4:	89 81       	ldd	r24, Y+1	; 0x01
+ 1b6:	9a 81       	ldd	r25, Y+2	; 0x02
+ 1b8:	29 e0       	ldi	r18, 0x09	; 9
+ 1ba:	84 3c       	cpi	r24, 0xC4	; 196
+ 1bc:	92 07       	cpc	r25, r18
+ 1be:	0c f4       	brge	.+2      	; 0x1c2 <main+0x156>
+ 1c0:	ba cf       	rjmp	.-140    	; 0x136 <main+0xca>
+ 1c2:	7d cf       	rjmp	.-262    	; 0xbe <main+0x52>
+
+000001c4 <__divmodhi4>:
+ 1c4:	97 fb       	bst	r25, 7
+ 1c6:	09 2e       	mov	r0, r25
+ 1c8:	07 26       	eor	r0, r23
+ 1ca:	0a d0       	rcall	.+20     	; 0x1e0 <__divmodhi4_neg1>
+ 1cc:	77 fd       	sbrc	r23, 7
+ 1ce:	04 d0       	rcall	.+8      	; 0x1d8 <__divmodhi4_neg2>
+ 1d0:	0c d0       	rcall	.+24     	; 0x1ea <__udivmodhi4>
+ 1d2:	06 d0       	rcall	.+12     	; 0x1e0 <__divmodhi4_neg1>
+ 1d4:	00 20       	and	r0, r0
+ 1d6:	1a f4       	brpl	.+6      	; 0x1de <__divmodhi4_exit>
+
+000001d8 <__divmodhi4_neg2>:
+ 1d8:	70 95       	com	r23
+ 1da:	61 95       	neg	r22
+ 1dc:	7f 4f       	sbci	r23, 0xFF	; 255
+
+000001de <__divmodhi4_exit>:
+ 1de:	08 95       	ret
+
+000001e0 <__divmodhi4_neg1>:
+ 1e0:	f6 f7       	brtc	.-4      	; 0x1de <__divmodhi4_exit>
+ 1e2:	90 95       	com	r25
+ 1e4:	81 95       	neg	r24
+ 1e6:	9f 4f       	sbci	r25, 0xFF	; 255
+ 1e8:	08 95       	ret
+
+000001ea <__udivmodhi4>:
+ 1ea:	aa 1b       	sub	r26, r26
+ 1ec:	bb 1b       	sub	r27, r27
+ 1ee:	51 e1       	ldi	r21, 0x11	; 17
+ 1f0:	07 c0       	rjmp	.+14     	; 0x200 <__udivmodhi4_ep>
+
+000001f2 <__udivmodhi4_loop>:
+ 1f2:	aa 1f       	adc	r26, r26
+ 1f4:	bb 1f       	adc	r27, r27
+ 1f6:	a6 17       	cp	r26, r22
+ 1f8:	b7 07       	cpc	r27, r23
+ 1fa:	10 f0       	brcs	.+4      	; 0x200 <__udivmodhi4_ep>
+ 1fc:	a6 1b       	sub	r26, r22
+ 1fe:	b7 0b       	sbc	r27, r23
+
+00000200 <__udivmodhi4_ep>:
+ 200:	88 1f       	adc	r24, r24
+ 202:	99 1f       	adc	r25, r25
+ 204:	5a 95       	dec	r21
+ 206:	a9 f7       	brne	.-22     	; 0x1f2 <__udivmodhi4_loop>
+ 208:	80 95       	com	r24
+ 20a:	90 95       	com	r25
+ 20c:	bc 01       	movw	r22, r24
+ 20e:	cd 01       	movw	r24, r26
+ 210:	08 95       	ret
+
+00000212 <_exit>:
+ 212:	f8 94       	cli
+
+00000214 <__stop_program>:
+ 214:	ff cf       	rjmp	.-2      	; 0x214 <__stop_program>

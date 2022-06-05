@@ -1,0 +1,36 @@
+#include<util/delay.h>
+
+#include "STD_TYPES.h"
+#include "BTT_MATH.h"
+#include "ERR_TYPE.h"
+
+#include "PORT_interface.h"
+
+#include "DIO_interface.h"
+
+#include "GIE_interface.h"
+
+#include "EXTI_interface.h"
+
+#include "ADC_interface.h"
+
+#include "CLCD_interface.h"
+
+
+void main()
+{
+	PORT_voidInit();
+
+	/*ADC_voidInit();
+	uint8 Local_u8Reading;
+
+	while(1)
+	{
+		Local_u8Reading = ADC_u8GetChannelResult(0);
+		DIO_u8SetPortValue(DIO_u8_PORTD,Local_u8Reading);
+	}*/
+
+	CLCD_sendString("HI");
+
+}
+

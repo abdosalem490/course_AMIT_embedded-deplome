@@ -1,0 +1,20 @@
+20:05:55 **** Incremental Build of configuration Debug for project SW_ICU ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega32 SW_ICU.elf
+AVR Memory Usage
+----------------
+Device: atmega32
+
+Program:    8020 bytes (24.5% Full)
+(.text + .data + .bootloader)
+
+Data:         23 bytes (1.1% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+
+20:05:55 Build Finished (took 169ms)
+

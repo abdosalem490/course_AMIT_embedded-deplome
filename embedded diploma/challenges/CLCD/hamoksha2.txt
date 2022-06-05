@@ -1,0 +1,274 @@
+#include<util/delay.h>
+
+#include "STD_TYPES.h"
+#include "BTT_MATH.h"
+#include "ERR_TYPE.h"
+
+#include "PORT_interface.h"
+
+#include "DIO_interface.h"
+
+#include "SSD_interface.h"
+#include "CLCD_interface.h"
+#include "LED_interface.h"
+#include "Switch_interface.h"
+
+
+int main(){
+
+	PORT_voidInit();
+	CLCD_voidInit();
+
+	uint8 Local_u8Index = 0;
+
+	uint8 Local_u8Effects[][8] =
+			{{0B11111,0B11111,0B00000,0B00000,0B00000,0B00000,0B00000,0B00000},
+			{0B00000,0B00000,0B00100,0B01000,0B11111,0B01000,0B00100,0B00000},
+			{0B00000,0B00000,0B00100,0B00010,0B11111,0B00010,0B00100,0B00000}};
+
+	uint8 Local_u8Goal[8] =
+		{0B00000,0B11111,0B11111,0B00011,0B00011,0B00011,0B00011,0B00011};
+	uint8 Local_u8Ball [][8] =
+		{{0B00000,0B00000,0B00000,0B00000,0B00000,0B00000,0B11000,0B11000},
+		{0B00000,0B00000,0B00000,0B00000,0B00000,0B00000,0B11000,0B11000},
+		{0B00000,0B00000,0B00000,0B00000,0B00000,0B01100,0B01100,0B00000},
+		{0B00000,0B00000,0B00000,0B00000,0B01100,0B01100,0B00000,0B00000},
+		{0B00000,0B00000,0B00000,0B01100,0B01100,0B00000,0B00000,0B00000}};
+
+	uint8 Local_u8Hamoksha[][8] =
+		{{0B01110,0B01010,0B01110,0B00100,0B11111,0B00100,0B01010,0B01010},
+		{0B00110,0B00110,0B00100,0B01110,0B10101,0B00100,0B01010,0B01001},
+		{0B01100,0B01100,0B00100,0B01110,0B10101,0B00100,0B01010,0B10010},
+		{0B01110,0B01010,0B01110,0B10101,0B11111,0B00100,0B11111,0B10001},
+		{0B10001,0B11111,0B00100,0B11111,0B10101,0B01110,0B01010,0B01110},
+		{0B11100,0B10100,0B11101,0B01111,0B01000,0B11111,0B10000,0B10000},
+		{0B00111,0B00101,0B10111,0B11110,0B00010,0B11111,0B00001,0B00001},
+		{0B01110,0B01010,0B10101,0B01110,0B00100,0B00100,0B01010,0B10001},
+		{0B00000,0B00000,0B00000,0B00000,0B00000,0B00000,0B00011,0B11111}};
+
+
+	uint8 Local_u8Bullet[8] =
+		{0B00000000,0B00000000,0B00001010,0B00000100,0B00001010,0B00000000,0B00000000,0B00000000};
+
+	uint8 Local_u8Gun[3][8] =
+		{{0B00000000,0B00011111,0B00010000,0B00010000,0B00011111,0B00010010,0B00010011,0B00010010},
+		{0B00000000,0B00011111,0B00000001,0B00000001,0B00011111,0B00001000,0B00011000,0B00000000},
+		{0B00010010,0B00010010,0B00010010,0B00010010,0B00011110,0B00000000,0B00000000,0B00000000}};
+
+	uint8 Lcoal_u8Death[][8] =
+		{{0B00000,0B00101,0B00101,0B00101,0B10101,0B11101,0B00000,0B10000},
+		{0B00000,0B01010,0B00000,0B01110,0B01010,0B11111,0B00000,0B00000},
+		{0B00000,0B00001,0B00001,0B11101,0B10001,0B11101,0B00000,0B00000},
+		{0B00000,0B00000,0B01000,0B01000,0B01000,0B11011,0B00000,0B00000},
+		{0B00000,0B00000,0B11101,0B10101,0B11101,0B00111,0B00000,0B00000}};
+
+	CLCD_sendString("Short Sad Story......");
+	_delay_ms(2000);
+
+	//<-----------------scene1----------------->
+	for(uint8 Local_u8Iterator = 0;Local_u8Iterator <16;Local_u8Iterator++)
+	{
+		CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[(Local_u8Iterator%2)],0,Local_u8Iterator,1);
+		_delay_ms(250);
+		CLCD_voidClearDisplay();
+	}
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[0],0,15,1);
+	CLCD_voidGoToXY(0,0);
+	CLCD_sendString("Hamoksha");
+	_delay_ms(500);
+	for(uint8 Local_u8Iterator = 0;Local_u8Iterator <8;Local_u8Iterator++)
+	{
+		CLCD_voidSendSpecialChatacter(Local_u8Effects[0],1,Local_u8Iterator,1);
+	}
+	_delay_ms(2000);
+	CLCD_voidClearDisplay();
+	//<--------------------------------------->
+
+	//<-----------------scene2----------------->
+	for(uint8 Local_u8Iterator = 15;Local_u8Iterator > 7;Local_u8Iterator--)
+	{
+		Local_u8Index = (Local_u8Iterator % 2) == 0 ? 2 : 0;
+
+		CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[Local_u8Index],0,Local_u8Iterator,1);
+		_delay_ms(250);
+		CLCD_voidClearDisplay();
+	}
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[0],0,7,1);
+	CLCD_voidGoToXY(0,0);
+	CLCD_sendString("Hi I am Hamoksha");
+	_delay_ms(500);
+	for(uint8 Local_u8Iterator = 0 ;Local_u8Iterator <7;Local_u8Iterator++)
+	{
+		CLCD_voidSendSpecialChatacter(Local_u8Effects[1],2,Local_u8Iterator,1);
+	}
+	for(uint8 Local_u8Iterator = 8 ;Local_u8Iterator < 16;Local_u8Iterator++)
+	{
+		CLCD_voidSendSpecialChatacter(Local_u8Effects[2],3,Local_u8Iterator,1);
+	}
+	_delay_ms(2000);
+	CLCD_voidClearDisplay();
+	//<--------------------------------------->
+
+	//<-----------------scene3----------------->
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[0],0,7,1);
+	CLCD_voidGoToXY(0,0);
+	CLCD_sendString("I can Run");
+	_delay_ms(500);
+	CLCD_voidClearDisplay();
+	CLCD_sendString("Watch me");
+	_delay_ms(500);
+	for(uint8 Local_u8Iterator = 7;Local_u8Iterator <16;Local_u8Iterator++)
+	{
+		CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[(Local_u8Iterator%2)],0,Local_u8Iterator,1);
+		_delay_ms(250);
+		CLCD_voidClearDisplay();
+	}
+	for(uint8 Local_u8Iterator = 15;Local_u8Iterator > 0;Local_u8Iterator--)
+	{
+		Local_u8Index = (Local_u8Iterator % 2) == 0 ? 2 : 0;
+
+		CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[Local_u8Index],0,Local_u8Iterator,1);
+		_delay_ms(250);
+		CLCD_voidClearDisplay();
+	}
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[0],0,0,1);
+
+	_delay_ms(2000);
+	CLCD_voidClearDisplay();
+	//<--------------------------------------->
+
+	//<-----------------scene4----------------->
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[0],6,0,1);
+	CLCD_voidGoToXY(1,0);
+	CLCD_sendString("I can play football");
+	_delay_ms(500);
+	CLCD_voidClearDisplay();
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[0],6,0,1);
+	CLCD_sendString("I will show you");
+	_delay_ms(500);
+	CLCD_voidClearDisplay();
+
+	for(uint8 Local_u8Iterator = 0;Local_u8Iterator <16;Local_u8Iterator++)
+	{
+		if(Local_u8Iterator < 8)
+			CLCD_voidSendSpecialChatacter(Local_u8Ball[0],1,8,1);
+		else if(Local_u8Iterator > 8 && Local_u8Iterator < 11)
+			CLCD_voidSendSpecialChatacter(Local_u8Ball[1],1,Local_u8Iterator,1);
+		else if(Local_u8Iterator > 10 && Local_u8Iterator < 13)
+			CLCD_voidSendSpecialChatacter(Local_u8Ball[2],1,Local_u8Iterator,1);
+		else if(Local_u8Iterator > 12 && Local_u8Iterator < 15)
+			CLCD_voidSendSpecialChatacter(Local_u8Ball[3],1,Local_u8Iterator,1);
+		else if(Local_u8Iterator ==  15)
+				CLCD_voidSendSpecialChatacter(Local_u8Ball[4],1,Local_u8Iterator,1);
+
+		if(Local_u8Iterator > 8)
+			CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[0],0,7,1);
+		else
+			CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[(Local_u8Iterator%2)],0,Local_u8Iterator,1);
+
+		CLCD_voidSendSpecialChatacter(Local_u8Goal,2,15,1);
+		_delay_ms(250);
+		CLCD_voidClearDisplay();
+	}
+	CLCD_sendString("GOAL");
+	_delay_ms(2000);
+	CLCD_voidClearDisplay();
+	//<--------------------------------------->
+
+	//<-----------------scene5----------------->
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[0],0,7,1);
+	CLCD_voidGoToXY(0,0);
+	CLCD_sendString("I can dance");
+	_delay_ms(500);
+	CLCD_voidClearDisplay();
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[0],0,7,1);
+	CLCD_voidGoToXY(0,0);
+	CLCD_sendString("don't believe ?");
+	_delay_ms(500);
+	uint8 Local_u8DanceIndex = 0;
+	for(uint8 Local_u8Iterator = 0;Local_u8Iterator <32;Local_u8Iterator++)
+	{
+		CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[Local_u8DanceIndex],0,7,1);
+		_delay_ms(250);
+		CLCD_voidClearDisplay();
+		Local_u8DanceIndex = (Local_u8DanceIndex+1) % 8;
+	}
+	_delay_ms(2000);
+	CLCD_voidClearDisplay();
+	//<--------------------------------------->
+
+	//<-----------------scene6----------------->
+	for(uint8 Local_u8Iterator = 0;Local_u8Iterator <16;Local_u8Iterator++)
+	{
+		CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[(Local_u8Iterator%2)],0,Local_u8Iterator,1);
+		_delay_ms(250);
+		CLCD_voidClearDisplay();
+	}
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[0],0,15,1);
+	_delay_ms(250);
+	CLCD_voidClearDisplay();
+	CLCD_voidSendSpecialChatacter(Local_u8Effects[0],1,15,1);
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[0],0,15,0);
+	_delay_ms(250);
+
+	CLCD_voidSendSpecialChatacter(Local_u8Gun[0],2,0,0);
+	CLCD_voidSendSpecialChatacter(Local_u8Gun[1],3,1,0);
+	CLCD_voidSendSpecialChatacter(Local_u8Gun[2],4,0,1);
+
+	CLCD_voidGoToXY(1,1);
+	CLCD_sendString("Don't kill me");
+	_delay_ms(1000);
+	CLCD_voidClearDisplay();
+
+	CLCD_voidSendSpecialChatacter(Local_u8Effects[0],1,15,1);
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[0],0,15,0);
+	_delay_ms(250);
+
+	CLCD_voidSendSpecialChatacter(Local_u8Gun[0],2,0,0);
+	CLCD_voidSendSpecialChatacter(Local_u8Gun[1],3,1,0);
+	CLCD_voidSendSpecialChatacter(Local_u8Gun[2],4,0,1);
+
+	CLCD_voidGoToXY(1,1);
+	CLCD_sendString("Shut up");
+	_delay_ms(1000);
+
+	for(uint8 Local_u8Iterator = 2;Local_u8Iterator <15;Local_u8Iterator++)
+	{
+		CLCD_voidSendSpecialChatacter(Local_u8Bullet,5,Local_u8Iterator,0);
+	}
+	_delay_ms(250);
+	CLCD_voidClearDisplay();
+
+	CLCD_voidSendSpecialChatacter(Local_u8Gun[0],2,0,0);
+	CLCD_voidSendSpecialChatacter(Local_u8Gun[1],3,1,0);
+	CLCD_voidSendSpecialChatacter(Local_u8Gun[2],4,0,1);
+
+	CLCD_voidSendSpecialChatacter(Local_u8Effects[0],1,15,1);
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[8],0,15,0);
+
+	_delay_ms(1000);
+	CLCD_voidClearDisplay();
+
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[8],0,8,1);
+	uint8 Loca_u8Index = 0;
+	for(uint8 Local_u8Iterator = 10;Local_u8Iterator > 5;Local_u8Iterator--)
+	{
+		CLCD_voidSendSpecialChatacter(Lcoal_u8Death[Loca_u8Index],Loca_u8Index+1,Local_u8Iterator,0);
+		Loca_u8Index++;
+	}
+	_delay_ms(4000);
+	CLCD_voidClearDisplay();
+
+	CLCD_sendString("END......");
+	_delay_ms(1000);
+	CLCD_voidClearDisplay();
+
+	CLCD_sendString("director :");
+	CLCD_voidGoToXY(0,1);
+	CLCD_sendString("abdo salm");
+	_delay_ms(3000);
+
+	//<--------------------------------------->
+
+	return 0;
+}

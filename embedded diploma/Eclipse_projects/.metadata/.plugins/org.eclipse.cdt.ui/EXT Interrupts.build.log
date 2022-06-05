@@ -1,0 +1,10 @@
+21:02:53 **** Incremental Build of configuration Debug for project EXT Interrupts ****
+make all 
+Building target: EXT Interrupts.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,EXT Interrupts.map -mmcu=atmega32 -o "EXT Interrupts.elf"  ./DIO_prog.o ./PORT_prog.o ./main.o   
+avr-gcc.exe: Interrupts.map: No such file or directory
+make: *** [EXT Interrupts.elf] Error 1
+
+21:02:53 Build Finished (took 154ms)
+

@@ -1,0 +1,76 @@
+/*******************************************************************************/
+/*******************************************************************************/
+/*************************	Author: Abdo salm	********************************/
+/*************************  Date: 30/10/2021	********************************/
+/*************************  Layer: MCAL			********************************/
+/*************************  Version: 1.00		********************************/
+/*******************************************************************************/
+/*******************************************************************************/
+
+#include "BTT_MATH.h"
+#include "STD_TYPES.h"
+
+#include "ADC_config.h"
+#include "ADC_private.h"
+#include "ADC_interface.h"
+#include "ADC_reg.h"
+
+void ADC_voidInit(void)
+{
+#if ADC_u8_REF_SELECTION == AREF
+	CLR_BIT(ADMUX,ADMUX_REFS1);
+	CLR_BIT(ADMUX,ADMUX_REFS0);
+#elif ADC_u8_REF_SELECTION == AVCC
+	CLR_BIT(ADMUX,ADMUX_REFS1);
+	SET_BIT(ADMUX,ADMUX_REFS0);
+#elif ADC_u8_REF_SELECTION == INTERNAL_2560mV
+	SET_BIT(ADMUX,ADMUX_REFS1);
+	SET_BIT(ADMUX,ADMUX_REFS0);
+#else
+#error "Wrong ADC_u8_REF_SELECTION Configuration option"
+#endif
+
+#if ADC_u8_RESOLUTION == EIGHT_BIT
+	SET_BIT(ADMUX,ADMUX_ADLAR);
+#elif ADC_u8_RESOLUTION == TEN_BIT
+	CLR_BIT(ADMUX,ADMUX_ADLAR);
+#else
+#error "Wrong ADC_u8_REF_RESOLUTION Configuration option"
+#endif
+
+ADCSRA &= PRESCALAR_BIT_MASK;
+ADCSRA |= ADC_u8_PRESCALER;
+
+#if ADC_u8_ENABLE_INIT_STATE == ENABLED
+	SET_BIT(ADCSRA,ADCSRA_ADEN);
+#elif ADC_u8_ENABLE_INIT_STATE == DISABLED
+	CLR_BIT(ADCSRA,ADCSRA_ADEN);
+#else
+#error "Wrong ADC_u8_ENABLE_INIT_STATE Configuration option"
+#endif
+}
+void ADC_voidEnable(void)
+{
+	SET_BIT(ADCSRA,ADCSRA_ADEN);
+}
+void ADC_voidDisable(void)
+{
+	CLR_BIT(ADCSRA,ADCSRA_ADEN);
+}
+uint16 ADC_u16GetChannelResult(uint8 Copy_u8Channel)
+{
+	/*select channel ADC0*/
+	ADMUX &= CHANNEL_BIT_MASK;
+	ADMUX |= Copy_u8Channel;
+
+	/*start conversion*/
+	SET_BIT(ADCSRA,6);
+
+	/*wait (polling) for the conversion complete flag*/
+	while(GET_BIT(ADCSRA,4) == 0);
+
+	/*Clear the conversoin complete flag*/
+	SET_BIT(ADCSRA,4);
+
+	return ADCH;
+}

@@ -1,0 +1,10 @@
+21:46:08 **** Incremental Build of configuration Debug for project CLCD ****
+make all 
+Building target: CLCD.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,CLCD.map -mmcu=atmega16 -o "CLCD.elf"  ./CLCD_prog.o ./main.o   
+c:/users/abdo/downloads/drive-download-20210929t192809z-001/sdk_win_64/sdk_win_64/sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm16.o:(.init9+0x0): undefined reference to `main'
+make: *** [CLCD.elf] Error 1
+
+21:46:09 Build Finished (took 216ms)
+

@@ -1,0 +1,30 @@
+#include<util/delay.h>
+
+#include "STD_TYPES.h"
+#include "BTT_MATH.h"
+#include "ERR_TYPE.h"
+
+#include "PORT_interface.h"
+
+#include "DIO_interface.h"
+
+#include "GIE_interface.h"
+
+#include "EXTI_interface.h"
+
+#include "ADC_interface.h"
+
+#include "CLCD_interface.h"
+
+
+void main()
+{
+	PORT_voidInit();
+
+	ADC_voidInit();
+
+
+	CLCD_sendString("HI");
+
+}
+

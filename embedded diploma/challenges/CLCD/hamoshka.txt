@@ -1,0 +1,94 @@
+uint8 Local_u8Effects[5][8] =
+	{{0B00000011,0B00000011,0B00011000,0B00011000,0B00000000,0B00000011,0B00011011,0B00011000},
+	{0B00011111,0B00011111,0B00000000,0B00000000,0B00000000,0B00000000,0B00000000,0B00000000},
+	{0B00000000,0B00000000,0B00000100,0B00001110,0B00011111,0B00001110,0B00000100,0B00000000},
+	{0B00000000,0B00000000,0B00000100,0B00000010,0B00011111,0B00000010,0B00000100,0B00000000},
+	{0B00010001,0B00011011,0B00000000,0B00001110,0B00001110,0B00000000,0B00011011,0B00010001}};
+
+	uint8 Local_u8Hamoksha[2][8] =
+	{{0B00000000,0B00000000,0B00001110,0B00001010,0B00001110,0B00000100,0B00001110,0B00010101},
+	{0B00010101,0B00010101,0B00000100,0B00001010,0B00001010,0B00001010,0B00010001,0B00010001}};
+
+	uint8 Local_u8Bullet[8] =
+	{0B00000000,0B00000000,0B00001010,0B00000100,0B00001010,0B00000000,0B00000000,0B00000000};
+
+	uint8 Local_u8Gun[3][8] =
+	{{0B00000000,0B00011111,0B00010000,0B00010000,0B00011111,0B00010010,0B00010011,0B00010010},
+	{0B00000000,0B00011111,0B00000001,0B00000001,0B00011111,0B00001000,0B00011000,0B00000000},
+	{0B00010010,0B00010010,0B00010010,0B00010010,0B00010010,0B00011110,0B00000000,0B00000000}};
+
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[0],6,0,0);
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[1],0,0,1);
+	CLCD_voidGoToXY(1,0);
+	CLCD_sendString("Hamoksha");
+	_delay_ms(500);
+	for(uint8 Local_u8Iterator = 1;Local_u8Iterator <16;Local_u8Iterator++)
+	{
+		CLCD_voidSendSpecialChatacter(Local_u8Effects[0],1,Local_u8Iterator,1);
+	}
+	_delay_ms(1000);
+	CLCD_voidClearDisplay();
+
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[0],6,0,0);
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[1],0,0,1);
+	CLCD_voidGoToXY(1,0);
+	CLCD_sendString("Hi I 'am Hamoksha");
+	_delay_ms(500);
+	for(uint8 Local_u8Iterator = 1;Local_u8Iterator <16;Local_u8Iterator++)
+	{
+		CLCD_voidSendSpecialChatacter(Local_u8Effects[1],2,Local_u8Iterator,1);
+	}
+	_delay_ms(1000);
+	CLCD_voidClearDisplay();
+
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[0],6,0,0);
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[1],0,0,1);
+	CLCD_voidGoToXY(1,0);
+	CLCD_sendString("I can Run");
+	_delay_ms(500);
+	for(uint8 Local_u8Iterator = 1;Local_u8Iterator <16;Local_u8Iterator++)
+	{
+		CLCD_voidSendSpecialChatacter(Local_u8Effects[2],3,Local_u8Iterator,1);
+	}
+	_delay_ms(1000);
+	CLCD_voidClearDisplay();
+
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[0],6,0,0);
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[1],0,0,1);
+	CLCD_voidGoToXY(1,0);
+	CLCD_sendString("I can play football");
+	_delay_ms(500);
+	for(uint8 Local_u8Iterator = 1;Local_u8Iterator <16;Local_u8Iterator++)
+	{
+		CLCD_voidSendSpecialChatacter(Local_u8Effects[3],4,Local_u8Iterator,1);
+	}
+	_delay_ms(1000);
+	CLCD_voidClearDisplay();
+
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[0],6,0,0);
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[1],0,0,1);
+	CLCD_voidGoToXY(1,0);
+	CLCD_sendString("I can dance");
+	_delay_ms(500);
+	for(uint8 Local_u8Iterator = 1;Local_u8Iterator <16;Local_u8Iterator++)
+	{
+		CLCD_voidSendSpecialChatacter(Local_u8Effects[4],5,Local_u8Iterator,1);
+	}
+	_delay_ms(1000);
+	CLCD_voidClearDisplay();
+
+
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[0],0,15,0);
+	CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[1],1,15,1);
+	CLCD_voidSendSpecialChatacter(Local_u8Gun[0],2,0,0);
+	CLCD_voidSendSpecialChatacter(Local_u8Gun[1],3,1,0);
+	CLCD_voidSendSpecialChatacter(Local_u8Gun[2],4,0,1);
+
+	CLCD_voidGoToXY(1,1);
+	CLCD_sendString("Don't kill me");
+	for(uint8 Local_u8Iterator = 2;Local_u8Iterator <15;Local_u8Iterator++)
+	{
+		CLCD_voidSendSpecialChatacter(Local_u8Bullet,5,Local_u8Iterator,0);
+	}
+	_delay_ms(3000);
+	CLCD_voidClearDisplay();

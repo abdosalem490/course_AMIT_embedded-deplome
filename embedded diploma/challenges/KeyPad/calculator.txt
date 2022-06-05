@@ -1,0 +1,577 @@
+#include<util/delay.h>
+
+#include "STD_TYPES.h"
+#include "BTT_MATH.h"
+#include "ERR_TYPE.h"
+
+#include "PORT_interface.h"
+
+#include "DIO_interface.h"
+
+#include "SSD_interface.h"
+#include "CLCD_interface.h"
+#include "LED_interface.h"
+#include "Switch_interface.h"
+#include "KPD_interface.h"
+
+
+
+typedef struct
+{
+	uint8 Local_u8NegativeFlag;
+	uint8 Lcoal_u8DecimalFlag;
+	uint8 Local_u8DevisionByZeroFlag;
+	uint32 Loca_u8ResultInteger;
+	uint32 Loca_u8ResultDecimal;
+}Result;
+
+typedef struct
+{
+	uint32 Local_u8Integer;
+	uint32 Local_Decimal;
+	uint8 Local_u8NegativeFlag;
+
+}Num;
+
+void ADD(Num Copy_u8FirstNum,Num Copy_u8SecondNum,Result* Copy_u8Result);
+void Subtract(Num Copy_u8FirstNum,Num Copy_u8SecondNum,Result* Copy_u8Result);
+
+void swap(Num* Copy_u32X,Num* Copy_u32Y)
+{
+	Num Local_u32Temp = *Copy_u32X;
+	*Copy_u32X = *Copy_u32Y;
+	*Copy_u32Y = Local_u32Temp;
+}
+
+uint32 getTenthOF(uint32 Copy_u8Num)
+{
+	uint32 Local_NumOfDigits = 1;
+	while(Copy_u8Num != 0)
+	{
+		Local_NumOfDigits *= 10;
+		Copy_u8Num /= 10;
+	}
+	return Local_NumOfDigits;
+}
+uint8 getNumOfDigits(uint32 Copy_u8Num)
+{
+	uint8 Local_u8NumOfDigits = 0;
+	while(Copy_u8Num != 0 && Copy_u8Num != 0)
+	{
+		Local_u8NumOfDigits++;
+		Copy_u8Num /= 10;
+	}
+	return Local_u8NumOfDigits;
+}
+
+void Safe_Deciaml(uint32* Copy_u8Num)
+{
+	while((*Copy_u8Num) % 10 == 0 && (*Copy_u8Num) != 0)
+		(*Copy_u8Num) /= 10;
+
+}
+void display(uint8 Copy_u8Arr[],uint8 Copy_u8StartIndex,uint8 Copy_u8ShowResult,Result Copy_u8Result)
+{
+	CLCD_voidClearDisplay();
+	for(uint8 Local_u8Iterator = Copy_u8StartIndex;Copy_u8Arr[Local_u8Iterator] != '\0' ; Local_u8Iterator++)
+	{
+		CLCD_voidSendData(Copy_u8Arr[Local_u8Iterator]);
+	}
+	if(Copy_u8ShowResult == 1)
+	{
+		CLCD_voidGoToXY(0,1);
+		CLCD_sendString("Res = ");
+		if(Copy_u8Result.Local_u8DevisionByZeroFlag == 0)
+		{
+			if(Copy_u8Result.Local_u8NegativeFlag == 1)
+				CLCD_voidSendData('-');
+
+			CLCD_sendNumebr(Copy_u8Result.Loca_u8ResultInteger);
+
+			if(Copy_u8Result.Lcoal_u8DecimalFlag == 1)
+			{
+				CLCD_voidSendData('.');
+				CLCD_sendNumebr(Copy_u8Result.Loca_u8ResultDecimal);
+			}
+		}
+		else
+		{
+			CLCD_sendString("ERR");
+		}
+
+	}
+}
+void Subtract(Num Copy_u8FirstNum,Num Copy_u8SecondNum,Result* Copy_u8Result)
+{
+	if(Copy_u8FirstNum.Local_u8NegativeFlag == 1 && Copy_u8SecondNum.Local_u8NegativeFlag == 1)
+	{
+		Copy_u8SecondNum.Local_u8NegativeFlag = 0;
+		Copy_u8FirstNum.Local_u8NegativeFlag = 0;
+		Subtract(Copy_u8SecondNum,Copy_u8FirstNum,Copy_u8Result);
+	}
+	else if(Copy_u8FirstNum.Local_u8NegativeFlag == 1 && Copy_u8SecondNum.Local_u8NegativeFlag == 0)
+	{
+		Copy_u8SecondNum.Local_u8NegativeFlag = 1;
+		ADD(Copy_u8FirstNum,Copy_u8SecondNum,Copy_u8Result);
+	}
+	else if(Copy_u8FirstNum.Local_u8NegativeFlag == 0 && Copy_u8SecondNum.Local_u8NegativeFlag == 1)
+	{
+		Copy_u8SecondNum.Local_u8NegativeFlag = 0;
+		ADD(Copy_u8FirstNum,Copy_u8SecondNum,Copy_u8Result);
+	}
+	else
+	{
+		if((Copy_u8SecondNum.Local_u8Integer > Copy_u8FirstNum.Local_u8Integer) ||
+			(Copy_u8SecondNum.Local_u8Integer == Copy_u8FirstNum.Local_u8Integer && Copy_u8SecondNum.Local_Decimal > Copy_u8FirstNum.Local_Decimal))
+		{
+			Copy_u8Result->Local_u8NegativeFlag = 1;
+			swap(&Copy_u8FirstNum,&Copy_u8SecondNum);
+		}
+		Copy_u8Result->Loca_u8ResultInteger = Copy_u8FirstNum.Local_u8Integer - Copy_u8SecondNum.Local_u8Integer;
+		if((Copy_u8SecondNum.Local_Decimal > Copy_u8FirstNum.Local_Decimal))
+		{
+			Copy_u8Result->Loca_u8ResultInteger -= 1;
+			Copy_u8FirstNum.Local_Decimal += getTenthOF(Copy_u8FirstNum.Local_Decimal);
+		}
+		Copy_u8Result->Loca_u8ResultDecimal = Copy_u8FirstNum.Local_Decimal - Copy_u8SecondNum.Local_Decimal;
+	}
+
+}
+void ADD(Num Copy_u8FirstNum,Num Copy_u8SecondNum,Result* Copy_u8Result)
+{
+	uint8 Local_u8Carry = 0;
+	uint32 Local_u8NumOfDigits = 0;
+	if(Copy_u8FirstNum.Local_u8NegativeFlag == 1 && Copy_u8SecondNum.Local_u8NegativeFlag == 0)
+	{
+		Copy_u8FirstNum.Local_u8NegativeFlag = 0;
+		Subtract(Copy_u8SecondNum,Copy_u8FirstNum,Copy_u8Result);
+	}
+	else if(Copy_u8FirstNum.Local_u8NegativeFlag == 0 && Copy_u8SecondNum.Local_u8NegativeFlag == 1)
+	{
+		Copy_u8SecondNum.Local_u8NegativeFlag = 0;
+		Subtract(Copy_u8FirstNum,Copy_u8SecondNum,Copy_u8Result);
+	}
+	else
+	{
+		if(Copy_u8FirstNum.Local_u8NegativeFlag == 1 && Copy_u8SecondNum.Local_u8NegativeFlag == 1)
+			Copy_u8Result->Local_u8NegativeFlag = 1;
+
+		if(Copy_u8FirstNum.Local_Decimal < Copy_u8SecondNum.Local_Decimal)
+			Local_u8NumOfDigits = getTenthOF(Copy_u8SecondNum.Local_Decimal);
+		else
+			Local_u8NumOfDigits = getTenthOF(Copy_u8FirstNum.Local_Decimal);
+
+		if((Copy_u8FirstNum.Local_Decimal + Copy_u8SecondNum.Local_Decimal) >= Local_u8NumOfDigits)
+			Local_u8Carry = (Copy_u8FirstNum.Local_Decimal + Copy_u8SecondNum.Local_Decimal) / Local_u8NumOfDigits;
+
+		Copy_u8Result->Loca_u8ResultInteger = Copy_u8FirstNum.Local_u8Integer + Copy_u8SecondNum.Local_u8Integer + Local_u8Carry;
+		Copy_u8Result->Loca_u8ResultDecimal = (Copy_u8FirstNum.Local_Decimal + Copy_u8SecondNum.Local_Decimal) % Local_u8NumOfDigits;
+
+	}
+
+}
+void multuiply(Num Copy_u8FirstNum,Num Copy_u8SecondNum,Result* Copy_u8Result)
+{
+	if((Copy_u8FirstNum.Local_u8NegativeFlag == 1 && Copy_u8SecondNum.Local_u8NegativeFlag == 0)||
+			(Copy_u8FirstNum.Local_u8NegativeFlag == 0 && Copy_u8SecondNum.Local_u8NegativeFlag == 1))
+		Copy_u8Result->Local_u8NegativeFlag = 1;
+
+
+	uint32 Local_u8NumOfDigitsDecimal = 0;
+
+	uint32 Local_u32Res1 = ((getTenthOF(Copy_u8FirstNum.Local_Decimal) * Copy_u8FirstNum.Local_u8Integer) + Copy_u8FirstNum.Local_Decimal);
+	uint32 Local_u32Res2 = ((getTenthOF(Copy_u8SecondNum.Local_Decimal) * Copy_u8SecondNum.Local_u8Integer) + Copy_u8SecondNum.Local_Decimal);
+
+	Local_u8NumOfDigitsDecimal = getTenthOF(Copy_u8FirstNum.Local_Decimal) * getTenthOF(Copy_u8SecondNum.Local_Decimal);
+
+	Copy_u8Result->Loca_u8ResultInteger = (Local_u32Res1*Local_u32Res2) / Local_u8NumOfDigitsDecimal;
+	Copy_u8Result->Loca_u8ResultDecimal = (Local_u32Res1*Local_u32Res2) % Local_u8NumOfDigitsDecimal;
+
+	Copy_u8Result->Local_u8DevisionByZeroFlag = 0;
+
+	if(Copy_u8Result->Loca_u8ResultDecimal != 0)
+		Copy_u8Result->Lcoal_u8DecimalFlag = 1;
+
+}
+void devide(Num Copy_u8FirstNum,Num Copy_u8SecondNum,Result* Copy_u8Result)
+{
+	if((Copy_u8FirstNum.Local_u8NegativeFlag == 1 && Copy_u8SecondNum.Local_u8NegativeFlag == 0)||
+		(Copy_u8FirstNum.Local_u8NegativeFlag == 0 && Copy_u8SecondNum.Local_u8NegativeFlag == 1))
+		Copy_u8Result->Local_u8NegativeFlag = 1;
+	else
+		Copy_u8Result->Local_u8NegativeFlag = 0;
+
+	if(Copy_u8SecondNum.Local_u8Integer == 0 && Copy_u8SecondNum.Local_Decimal == 0)
+	{
+		Copy_u8Result->Local_u8DevisionByZeroFlag = 1;
+		Copy_u8Result->Loca_u8ResultInteger = 0;
+	}
+	else
+	{
+		uint64 Local_u32Res1 = (10 * getTenthOF(Copy_u8SecondNum.Local_Decimal) *((getTenthOF(Copy_u8FirstNum	.Local_Decimal) * Copy_u8FirstNum.Local_u8Integer) + Copy_u8FirstNum.Local_Decimal));
+		uint64 Local_u32Res2 = ((getTenthOF(Copy_u8SecondNum.Local_Decimal) * Copy_u8SecondNum.Local_u8Integer) + Copy_u8SecondNum.Local_Decimal);
+
+		Copy_u8Result->Loca_u8ResultInteger = (Local_u32Res1/Local_u32Res2) / (10 * getTenthOF(Copy_u8FirstNum.Local_Decimal));
+		Copy_u8Result->Loca_u8ResultDecimal = (Local_u32Res1/Local_u32Res2) % (10 * getTenthOF(Copy_u8FirstNum.Local_Decimal));
+
+		Copy_u8Result->Local_u8DevisionByZeroFlag = 0;
+
+		if(Copy_u8Result->Loca_u8ResultDecimal != 0)
+			Copy_u8Result->Lcoal_u8DecimalFlag = 1;
+	}
+}
+void calculateResultForTwoNum(Num Copy_u8FirstNum,Num Copy_u8SecondNum,uint8 Copy_u8Operator,Result* Copy_u8Result)
+{
+	Safe_Deciaml(&Copy_u8FirstNum.Local_Decimal);
+	Safe_Deciaml(&Copy_u8SecondNum.Local_Decimal);
+
+	if(Copy_u8FirstNum.Local_Decimal != 0 || Copy_u8SecondNum.Local_Decimal != 0)
+		Copy_u8Result->Lcoal_u8DecimalFlag = 1;
+	while((getTenthOF(Copy_u8FirstNum.Local_Decimal) < getTenthOF(Copy_u8SecondNum.Local_Decimal)) && Copy_u8FirstNum.Local_Decimal != 0)
+	{
+		Copy_u8FirstNum.Local_Decimal *= 10;
+	}
+	while((getTenthOF(Copy_u8FirstNum.Local_Decimal) > getTenthOF(Copy_u8SecondNum.Local_Decimal)) && Copy_u8SecondNum.Local_Decimal != 0)
+	{
+		Copy_u8SecondNum.Local_Decimal *= 10;
+	}
+
+	switch(Copy_u8Operator)
+	{
+	case '+':
+		ADD(Copy_u8FirstNum,Copy_u8SecondNum,Copy_u8Result);
+		break;
+
+	case '-':
+		Subtract(Copy_u8FirstNum,Copy_u8SecondNum,Copy_u8Result);
+		break;
+
+	case'*':
+		multuiply(Copy_u8FirstNum,Copy_u8SecondNum,Copy_u8Result);
+		break;
+
+	case'/':
+		devide(Copy_u8FirstNum,Copy_u8SecondNum,Copy_u8Result);
+		break;
+	}
+}
+void calculateResult(uint8 Copy_u8Arr[],Result* Copy_u8Result,uint8 Copy_u8Length,uint8* Copy_u8Eror)
+{
+	//Num variables
+	Num Lcoal_u8FirstNum = {0,0,0};
+	Num Lcoal_u8SecondNum = {0,0,0};
+
+
+	uint8 Local_u8FirstNumIndex = -1;
+	uint8 Local_u8SecondNumIndex = -1;
+	uint8 Local_u8OperatorIndex = -1;
+	uint8 Local_u8EOF_Expression = -1;
+
+	uint8 Lcoal_u8Iterator = 0;
+
+	uint8 Local_u8Switch = 0;
+	uint8 Local_u8Break = 0;
+
+	do
+	{
+		Lcoal_u8FirstNum.Local_Decimal = 0;
+		Lcoal_u8FirstNum.Local_u8Integer = 0;
+		Lcoal_u8FirstNum.Local_u8NegativeFlag = 0;
+
+		Lcoal_u8SecondNum.Local_Decimal = 0;
+		Lcoal_u8SecondNum.Local_u8Integer = 0;
+		Lcoal_u8SecondNum.Local_u8NegativeFlag = 0;
+
+
+		//reseting variables
+		Local_u8FirstNumIndex = 255;
+		Local_u8SecondNumIndex = 255;
+		Local_u8OperatorIndex = 255;
+		Local_u8EOF_Expression = 255;
+
+		Lcoal_u8Iterator = 0;
+
+		for(uint8 local_u8I = 1 ;Copy_u8Arr[local_u8I] != '\0';local_u8I++)
+		{
+			if(Copy_u8Arr[local_u8I] == '/' || Copy_u8Arr[local_u8I] == '*' ||
+					Copy_u8Arr[local_u8I] == '+' || Copy_u8Arr[local_u8I] == '-' )
+			{
+				Local_u8Break = 0;
+				break;
+			}
+			Local_u8Break = 1;
+		}
+
+		if(Local_u8Break == 1)
+			return;
+
+		//check if there is any other multiplication
+		for(uint8 Local_u8IS = 0; Copy_u8Arr[Local_u8IS] != '\0';Local_u8IS++)
+		{
+			if(Copy_u8Arr[Local_u8IS] == '/' || Copy_u8Arr[Local_u8IS] == '*' )
+			{
+				Local_u8Switch = 0;
+				break;
+			}
+			else if(Copy_u8Arr[Local_u8IS] == '+' || Copy_u8Arr[Local_u8IS] == '-' )
+			{
+				Local_u8Switch = 1;
+			}
+		}
+
+
+		//get operator
+		while(Copy_u8Arr[Lcoal_u8Iterator] != '\0')
+		{
+			if((Copy_u8Arr[Lcoal_u8Iterator] == '/' || Copy_u8Arr[Lcoal_u8Iterator] == '*') && Local_u8Switch == 0 && Lcoal_u8Iterator != 0)
+			{
+				Local_u8OperatorIndex = Lcoal_u8Iterator;
+				break;
+			}
+			else if((Copy_u8Arr[Lcoal_u8Iterator] == '+' || Copy_u8Arr[Lcoal_u8Iterator] == '-') && Local_u8Switch == 1 && Lcoal_u8Iterator != 0)
+			{
+				Local_u8OperatorIndex = Lcoal_u8Iterator;
+				break;
+			}
+			Lcoal_u8Iterator++;
+		}
+
+		//get firstNum
+		Lcoal_u8Iterator--;
+		while(Copy_u8Arr[Lcoal_u8Iterator] >= 0)
+		{
+			if(Copy_u8Arr[Lcoal_u8Iterator] == '/' || Copy_u8Arr[Lcoal_u8Iterator] == '*'
+				|| Copy_u8Arr[Lcoal_u8Iterator] == '+' || Copy_u8Arr[Lcoal_u8Iterator] == '-' || Lcoal_u8Iterator == 0)
+			{
+				if(Lcoal_u8Iterator == 0 && (Copy_u8Arr[Lcoal_u8Iterator] != '-' ))
+					Local_u8FirstNumIndex = 0;
+				else
+					Local_u8FirstNumIndex = Lcoal_u8Iterator + 1;
+				break;
+			}
+			Lcoal_u8Iterator--;
+		}
+
+
+		//get secondNum
+		Lcoal_u8Iterator = Local_u8OperatorIndex;
+		while(Copy_u8Arr[Lcoal_u8Iterator] != '\0')
+		{
+			if(Copy_u8Arr[Lcoal_u8Iterator] != '.' && Copy_u8Arr[Lcoal_u8Iterator] != '/' && Copy_u8Arr[Lcoal_u8Iterator] != '*'
+				&& Copy_u8Arr[Lcoal_u8Iterator] != '+' && Copy_u8Arr[Lcoal_u8Iterator] != '-')
+			{
+				Local_u8SecondNumIndex = Lcoal_u8Iterator;
+				break;
+			}
+			Lcoal_u8Iterator++;
+		}
+
+		//get EOF
+		while(1)
+		{
+			if(Copy_u8Arr[Lcoal_u8Iterator] == '/' || Copy_u8Arr[Lcoal_u8Iterator] == '*'
+				|| Copy_u8Arr[Lcoal_u8Iterator] == '+' || Copy_u8Arr[Lcoal_u8Iterator] == '-' || Copy_u8Arr[Lcoal_u8Iterator] == '\0')
+			{
+				Local_u8EOF_Expression = Lcoal_u8Iterator;
+				break;
+			}
+			Lcoal_u8Iterator++;
+		}
+
+		Result Copy_u8Res;
+		if(Local_u8OperatorIndex != 255 && Local_u8FirstNumIndex != 255 && Local_u8SecondNumIndex!= 255)
+		{
+			if(Copy_u8Arr[Local_u8OperatorIndex] == '/' || Copy_u8Arr[Local_u8OperatorIndex] == '*'
+					||Copy_u8Arr[Local_u8OperatorIndex] == '+' || Copy_u8Arr[Local_u8OperatorIndex] == '-' )
+			{
+
+
+				uint8 Local_u8DecimalCheck = 0;
+				for(uint8 Local_u8Iterator = Local_u8FirstNumIndex; Local_u8Iterator< Local_u8OperatorIndex; Local_u8Iterator++)
+				{
+					if(Copy_u8Arr[Local_u8Iterator] == '.')
+					{
+						Local_u8DecimalCheck = 1;
+						Local_u8Iterator++;
+					}
+					if(Local_u8DecimalCheck == 0)
+					{
+						Lcoal_u8FirstNum.Local_u8Integer *= 10;
+						Lcoal_u8FirstNum.Local_u8Integer += (Copy_u8Arr[Local_u8Iterator]-'0');
+					}
+					else if(Local_u8DecimalCheck == 1)
+					{
+						Lcoal_u8FirstNum.Local_Decimal *= 10;
+						Lcoal_u8FirstNum.Local_Decimal += (Copy_u8Arr[Local_u8Iterator]-'0');
+					}
+
+
+				}
+
+				if(Local_u8FirstNumIndex != 0 && Copy_u8Arr[Local_u8FirstNumIndex - 1] == '-')
+					Lcoal_u8FirstNum.Local_u8NegativeFlag = 1;
+
+				Local_u8DecimalCheck = 0;
+
+				for(uint8 Local_u8Iterator = Local_u8SecondNumIndex; Local_u8Iterator< Local_u8EOF_Expression; Local_u8Iterator++)
+				{
+					if(Copy_u8Arr[Local_u8Iterator] == '.')
+					{
+						Local_u8DecimalCheck = 1;
+						Local_u8Iterator++;
+					}
+					if(Local_u8DecimalCheck == 0)
+					{
+						Lcoal_u8SecondNum.Local_u8Integer *= 10;
+						Lcoal_u8SecondNum.Local_u8Integer += (Copy_u8Arr[Local_u8Iterator]-'0');
+					}
+					else if(Local_u8DecimalCheck == 1)
+					{
+						Lcoal_u8SecondNum.Local_Decimal *= 10;
+						Lcoal_u8SecondNum.Local_Decimal += (Copy_u8Arr[Local_u8Iterator]-'0');
+					}
+
+				}
+
+
+				if(Local_u8SecondNumIndex != 0 && Copy_u8Arr[Local_u8SecondNumIndex - 1] == '-' && (Local_u8SecondNumIndex-1) != Local_u8OperatorIndex)
+					Lcoal_u8SecondNum.Local_u8NegativeFlag = 1;
+
+
+				calculateResultForTwoNum(Lcoal_u8FirstNum,Lcoal_u8SecondNum,Copy_u8Arr[Local_u8OperatorIndex],&Copy_u8Res);
+
+
+
+
+				*Copy_u8Result = Copy_u8Res;
+				if(Copy_u8Res.Local_u8DevisionByZeroFlag == 1)
+				{
+					*Copy_u8Eror = 1;
+					break;
+				}
+
+				uint8 Local_u8Iterator = Local_u8FirstNumIndex;
+				if(Lcoal_u8FirstNum.Local_u8NegativeFlag == 1)
+					Local_u8Iterator--;
+
+				if(Copy_u8Res.Local_u8NegativeFlag == 1)
+				{
+					Copy_u8Arr[Local_u8Iterator] = '-';
+					Local_u8Iterator++;
+				}
+
+				//insert integer part of result
+				uint8 Local_u8C = 0;
+				uint32 Local_u8Num = 0;
+				while(Copy_u8Res.Loca_u8ResultInteger != 0)
+				{
+					Local_u8Num *= 10;
+					Local_u8Num += (Copy_u8Res.Loca_u8ResultInteger % 10);
+					Copy_u8Res.Loca_u8ResultInteger /= 10;
+					Local_u8C++;
+				}
+				for(;Local_u8C > 0 ; Local_u8C--)
+				{
+					Copy_u8Arr[Local_u8Iterator] = ((Local_u8Num % 10)+'0');
+					Local_u8Num /= 10;
+					Local_u8Iterator++;
+				}
+				if(Copy_u8Res.Lcoal_u8DecimalFlag == 1)
+				{
+					Copy_u8Arr[Local_u8Iterator] = '.';
+					Local_u8Iterator++;
+
+					//insert decimal part of result
+					Local_u8C = 0;
+					Local_u8Num = 0;
+					while(Copy_u8Res.Loca_u8ResultDecimal != 0)
+					{
+						Local_u8Num *= 10;
+						Local_u8Num += (Copy_u8Res.Loca_u8ResultDecimal % 10);
+						Copy_u8Res.Loca_u8ResultDecimal /= 10;
+						Local_u8C++;
+					}
+					for(;Local_u8C > 0 ; Local_u8C--)
+					{
+						Copy_u8Arr[Local_u8Iterator] = ((Local_u8Num % 10)+'0');
+						Local_u8Num /= 10;
+						Local_u8Iterator++;
+					}
+				}
+
+
+
+
+
+				//shifting
+				while(Copy_u8Arr[Local_u8EOF_Expression] != '\0')
+				{
+					Copy_u8Arr[Local_u8Iterator] = Copy_u8Arr[Local_u8EOF_Expression];
+					Local_u8Iterator++;
+					Local_u8EOF_Expression++;
+				}
+				Copy_u8Arr[Local_u8Iterator] = Copy_u8Arr[Local_u8EOF_Expression];
+
+			}
+		}
+
+	}while(Local_u8OperatorIndex != 255);
+}
+int main(){
+
+	PORT_voidInit();
+	CLCD_voidInit();
+
+	uint8 Copy_u8Arr[100];
+	uint8 Copy2_u8Arr[100];
+
+	Result Local_u8Result;
+
+	uint8 Local_u8Val;
+	uint8 Local_u8Index = 0;
+	uint8 Local_u8Switch = 0;
+	while(1)
+	{
+		if(Local_u8Switch == 0)
+		{
+			while(Local_u8Val != '=')
+			{
+				Local_u8Val = KPD_u8GetPressedKey();
+				if(Local_u8Val != 0xff)
+				{
+					Copy_u8Arr[Local_u8Index] = Local_u8Val;
+					Local_u8Index++;
+					Copy_u8Arr[Local_u8Index] = '\0';
+					if(Local_u8Index > 15)
+						display(Copy_u8Arr,Local_u8Index-15,0,Local_u8Result);
+					else
+						display(Copy_u8Arr,0,0,Local_u8Result);
+				}
+			}
+			uint8 Local_u8Iterator;
+			for(Local_u8Iterator = 0;Copy_u8Arr[Local_u8Iterator] != '\0';Local_u8Iterator++)
+				Copy2_u8Arr[Local_u8Iterator] = Copy_u8Arr[Local_u8Iterator];
+
+			Copy2_u8Arr[Local_u8Iterator - 1] = '\0';
+			uint8 Local_u8Err = 0;
+
+			calculateResult(Copy2_u8Arr,&Local_u8Result,Local_u8Index,&Local_u8Err);
+			Local_u8Result.Local_u8DevisionByZeroFlag = Local_u8Err;
+
+			display(Copy_u8Arr,0,1,Local_u8Result);
+		}
+		Local_u8Switch = 1;
+
+		Local_u8Val = KPD_u8GetPressedKey();
+		if(Local_u8Val != 0xff)
+		{
+			Local_u8Switch = 0;
+			Copy_u8Arr[0] = '\0';
+			Copy2_u8Arr[0] = '\0';
+			Local_u8Index = 0;
+		}
+	}
+
+
+	return 0;
+}

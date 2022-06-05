@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;DIO/LCD_private.h&apos; to &apos;CLCD_private.h&apos;" description="Rename resource &apos;LCD_private.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="LCD_private.h" name="CLCD_private.h" stamp="1634323100780" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;DIO/LCD_interface.h&apos; to &apos;CLCD_interface.h&apos;" description="Rename resource &apos;LCD_interface.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="LCD_interface.h" name="CLCD_interface.h" stamp="1634323108634" updateReferences="true"/>
+</session>

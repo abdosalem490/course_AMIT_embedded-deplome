@@ -1,0 +1,171 @@
+#include <util/delay.h>
+#include <stdlib.h>
+
+
+#include "STD_TYPES.h"
+#include "BTT_MATH.h"
+#include "ERR_TYPE.h"
+
+#include "PORT_interface.h"
+
+#include "DIO_interface.h"
+
+#include "GIE_interface.h"
+
+#include "EXTI_interface.h"
+#include "Switch_interface.h"
+#include "CLCD_interface.h"
+#include "SSD_interface.h"
+#include "KPD_interface.h"
+
+uint8 MAIN_voidEnter()
+{
+	CLCD_sendString("Back from death...");
+	_delay_ms(1000);
+	CLCD_voidClearDisplay();
+	CLCD_sendString("Hamoksha :(");
+	_delay_ms(1000);
+	CLCD_voidClearDisplay();
+
+	//Hamoksha back from death
+	uint8 Local_u8Hamoksha[][8] = {{0B01110,0B01010,0B01110,0B00100,0B01110,0B10101,0B01010,0B10001},
+								   {0B01110,0B01110,0B01110,0B00100,0B01110,0B10101,0B01110,0B01001}};
+	uint8 Local_u8ArrID[16];
+	uint8 Local_u8ArrPass[16];
+	uint8 Local_u8Infrom = 0xff;
+	uint8 Local_u8Index = 0;
+	uint8 Local_u8IdDigits = 0;
+	uint8 Local_u8PassDigits = 0;
+
+	for(uint8 Local_u8Iterator = 0;Local_u8Iterator < 16 ; Local_u8Iterator++)
+	{
+		CLCD_voidSendSpecialChatacter(Local_u8Hamoksha[Local_u8Index],0,Local_u8Iterator,0);
+		Local_u8Index = (Local_u8Index+1) % 2;
+		_delay_ms(50);
+		CLCD_voidClearDisplay();
+	}
+
+	CLCD_sendString("Welcome");
+	_delay_ms(1000);
+	CLCD_voidClearDisplay();
+
+	//enter the ID
+	CLCD_sendString("enter your ID");
+
+	CLCD_voidGoToXY(0,1);
+	Local_u8Index = 0;
+	while(Local_u8Infrom != '=' && Local_u8Infrom != '-' && Local_u8Infrom != '*' && Local_u8Infrom != '/'
+			&& Local_u8Infrom != '+' && Local_u8Infrom != '.')
+	{
+		Local_u8Infrom = KPD_u8GetPressedKey();
+		if(Local_u8Infrom != 0xff)
+		{
+			CLCD_voidSendData(Local_u8Infrom);
+			Local_u8ArrID[Local_u8Index] = Local_u8Infrom;
+		    Local_u8Index++;
+			Local_u8IdDigits++;
+		}
+	}
+	Local_u8ArrID[Local_u8Index-1] = '\0';
+	Local_u8IdDigits--;
+	CLCD_voidClearDisplay();
+
+	//enter the password
+	CLCD_sendString("enter your password");
+	Local_u8Infrom = 0xff;
+	CLCD_voidGoToXY(0,1);
+	Local_u8Index = 0;
+	while(Local_u8Infrom != '=' && Local_u8Infrom != '-' && Local_u8Infrom != '*' && Local_u8Infrom != '/'
+			&& Local_u8Infrom != '+' && Local_u8Infrom != '.')
+	{
+		Local_u8Infrom = KPD_u8GetPressedKey();
+		if(Local_u8Infrom != 0xff)
+		{
+			CLCD_voidSendData(Local_u8Infrom);
+			Local_u8ArrPass[Local_u8Index] = Local_u8Infrom;
+		    Local_u8Index++;
+			Local_u8PassDigits++;
+		}
+	}
+	Local_u8ArrPass[Local_u8Index-1] = '\0';
+	Local_u8PassDigits--;
+
+	CLCD_voidClearDisplay();
+
+	if(Local_u8IdDigits != Local_u8PassDigits)
+	{
+		CLCD_sendString("not same num of digits");
+		return 0;
+	}
+	for(uint8 Local_u8Iterator = 0; Local_u8Iterator < Local_u8IdDigits ; Local_u8Iterator++)
+	{
+		if(Local_u8ArrID[Local_u8Iterator] != Local_u8ArrPass[Local_u8PassDigits-Local_u8Iterator-1])
+			return 0;
+	}
+
+	return 1;
+}
+uint8 Global_u8Enable = 0;
+uint8 Global_u8Reset = 1;
+void MAIN_voidReset()
+{
+	if(Global_u8Enable == 1)
+	{
+		Global_u8Reset = 1;
+	}
+}
+void main()
+{
+	PORT_voidInit();
+
+	CLCD_voidInit();
+	GIE_voidEnableGlobal();
+	EXTI_voidInit();
+	EXTI_u8SetCallBack(EXTI_u8_INT0,&MAIN_voidReset);
+	SSD_Config_t Local_u8SSD = {DIO_u8_PORTC,DIO_u8_PIN0,DIO_u8_PIN1,DIO_u8_PIN2,DIO_u8_PIN3,DIO_u8_PORTC,DIO_u8_PIN4,DIO_u8_SSD_TYPE_CATHODE};
+
+
+
+
+	uint8 Local_u8NumOftrials = 3;
+	while(1)
+	{
+		if(Global_u8Reset == 1)
+		{
+			Global_u8Enable = 0;
+			Local_u8NumOftrials = 3;
+			while(Local_u8NumOftrials > 0)
+			{
+				SSD_u8SetNumber(&Local_u8SSD,Local_u8NumOftrials);
+
+				if(MAIN_voidEnter() == 0)
+				{
+					CLCD_voidClearDisplay();
+					Local_u8NumOftrials--;
+					CLCD_sendString("FALSE pass");
+					_delay_ms(1000);
+					CLCD_voidClearDisplay();
+				}
+				else
+				{
+					CLCD_sendString("TRUE pass");
+					for(uint8 local_u8I = 0 ;local_u8I < 5;local_u8I++)
+					{
+						DIO_u8SetPinValue(DIO_u8_PORTD,DIO_u8_PIN7,DIO_u8_PIN_HIGH);
+						_delay_ms(1000);
+						DIO_u8SetPinValue(DIO_u8_PORTD,DIO_u8_PIN7,DIO_u8_PIN_LOW);
+					}
+					break;
+				}
+			}
+			Global_u8Reset = 0;
+		}
+
+		SSD_u8SetNumber(&Local_u8SSD,Local_u8NumOftrials);
+		Global_u8Enable = 1;
+
+	}
+
+
+
+}

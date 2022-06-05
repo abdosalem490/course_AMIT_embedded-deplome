@@ -1,0 +1,60 @@
+/*******************************************************************************/
+/*******************************************************************************/
+/*************************	Author: Abdo salm	********************************/
+/*************************  Date: 30/10/2021	********************************/
+/*************************  Layer: MCAL			********************************/
+/*************************  Version: 1.00		********************************/
+/*******************************************************************************/
+/*******************************************************************************/
+
+#include "BTT_MATH.h"
+#include "STD_TYPES.h"
+
+#include "ADC_config.h"
+#include "ADC_private.h"
+#include "ADC_interface.h"
+#include "ADC_reg.h"
+
+void ADC_voidInit(void)
+{
+	//select AVCC as REF
+	CLR_BIT(ADMUX,7);
+	SET_BIT(ADMUX,6);
+
+	//set the register as left adjustment
+	SET_BIT(ADMUX,5);
+
+	//enable ADC
+	SET_BIT(ADCSRA,5);
+
+	//select division factor
+
+	ADCSRA &= 0b11111000;
+	ADCSRA |= 0b00000111;
+	/*SET_BIT(ADCSRA,0);
+	SET_BIT(ADCSRA,1);
+	SET_BIT(ADCSRA,2);*/
+
+}
+
+uint8 ADC_u8GetChannelResult(uint8 Copy_u8Channel)
+{
+	//select channel ADC0
+	ADMUX &= 0b11100000;
+	ADMUX |= Copy_u8Channel;
+
+	/*CLR_BIT(ADMUX,0);
+	CLR_BIT(ADMUX,1);
+	CLR_BIT(ADMUX,2);
+	CLR_BIT(ADMUX,3);
+	CLR_BIT(ADMUX,4);*/
+
+	//start conversion
+	SET_BIT(ADCSRA,6);
+
+	while(GET_BIT(ADCSRA,4) == 0);
+
+	SET_BIT(ADCSRA,4);
+
+	return ADCH;
+}

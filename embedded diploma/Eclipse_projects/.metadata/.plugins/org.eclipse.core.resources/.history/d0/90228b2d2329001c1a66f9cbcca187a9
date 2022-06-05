@@ -1,0 +1,25 @@
+#include "STD_TYPES.h"
+#include "BTT_MATH.h"
+#include "ERR_TYPE.h"
+
+#include "DIO_interface.h"
+#include "DIO_reg.h"
+#include "DIO_private.h"
+#include "DIO_config.h"
+
+int main(){
+	DIO_u8SetPinDirection(DDRD,DIO_u8_PIN2,DIO_u8_PIN_LOW);
+	DIO_u8SetPinDirection(DDRD,DIO_u8_PIN3,DIO_u8_PIN_HIGH);
+	uint8 DIO_u8Button2Clicked = 0;
+	if(DIO_u8ReadPinValue(PORTD,DIO_u8_PIN3,&DIO_u8Button2Clicked) == OK){
+		while(1){
+			if(DIO_u8Button2Clicked == DIO_u8_PIN_HIGH){
+				DIO_u8SetPinValue(PORTD,DIO_u8_PIN3,DIO_u8_PIN_HIGH);
+			}
+			DIO_u8ReadPinValue(PORTD,DIO_u8_PIN3,&DIO_u8Button2Clicked);
+		}
+	}
+
+
+	return 0;
+}

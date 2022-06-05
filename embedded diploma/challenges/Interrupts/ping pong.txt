@@ -1,0 +1,162 @@
+#include <util/delay.h>
+#include <stdlib.h>
+
+
+#include "STD_TYPES.h"
+#include "BTT_MATH.h"
+#include "ERR_TYPE.h"
+
+#include "PORT_interface.h"
+
+#include "DIO_interface.h"
+
+#include "GIE_interface.h"
+
+#include "EXTI_interface.h"
+#include "Switch_interface.h"
+#include "CLCD_interface.h"
+
+typedef struct
+{
+	uint8 Local_u8Xpos;
+	uint8 Local_u8Ypos;
+	uint8 Local_u8Shape[8];
+}Shape;
+
+void MAIN_voidSet_CLCD_Display(Shape Copy_u8Ball,Shape Copy_u8Block)
+{
+	CLCD_voidClearDisplay();
+	//setting position of ball & block
+	CLCD_voidSendSpecialChatacter(Copy_u8Ball.Local_u8Shape,0,Copy_u8Ball.Local_u8Xpos,Copy_u8Ball.Local_u8Ypos);
+	CLCD_voidSendSpecialChatacter(Copy_u8Block.Local_u8Shape,1,Copy_u8Block.Local_u8Xpos,Copy_u8Block.Local_u8Ypos);
+}
+
+void MAIN_voidMoveBall();
+void MAIN_voidWIN();
+void MAIN_voidLOSE();
+void MAIN_voidMoveBall();
+
+uint8 Global_u8Flag = 0;
+void MAIN_voidWIN()
+{
+	CLCD_voidClearDisplay();
+	CLCD_sendString("YOU WIN");
+	Global_u8Flag = 1;
+	_delay_ms(3000);
+
+}
+void MAIN_voidLOSE()
+{
+	CLCD_voidClearDisplay();
+	CLCD_sendString("YOU LOSE");
+	Global_u8Flag = 1;
+	_delay_ms(3000);
+
+}
+void MAIN_voidBALL()
+{
+	MAIN_voidMoveBall();
+}
+
+void MAIN_voidMoveBall()
+{
+	CLCD_voidClearDisplay();
+	SW_Config_t Local_SW0 = {DIO_u8_PORTB,DIO_u8_PIN0,DIO_u8_PULL_DOWN};
+
+
+	Shape Local_structBall = {15,(rand() % 2),{0B00000,0B00000,0B00100,0B01110,0B11111,0B01110,0B00100,0B00000}};
+	Shape Local_structBlock = {0,0,{0B00011,0B00011,0B00011,0B00011,0B00011,0B00011,0B00011,0B00011}};
+	uint8 Local_u8SWstatus;
+
+
+	for(uint8 Local_u8Iterator = 0; Local_u8Iterator < 15 ; Local_u8Iterator++)
+	{
+		MAIN_voidSet_CLCD_Display(Local_structBall,Local_structBlock);
+
+		Local_structBall.Local_u8Xpos--;
+		Local_structBall.Local_u8Ypos = rand() % 2;
+
+		SW_u8GetState(&Local_SW0,&Local_u8SWstatus);
+
+		if(Local_u8SWstatus == DIO_u8_SWITCH_PRESSED)
+			Local_structBlock.Local_u8Ypos = 1;
+		else
+			Local_structBlock.Local_u8Ypos = 0;
+
+		_delay_ms(200);
+	}
+
+	if(Local_structBall.Local_u8Ypos == Local_structBlock.Local_u8Ypos)
+	{
+
+		for(uint8 Local_u8Iterator = 0; Local_u8Iterator <= 15 ; Local_u8Iterator++)
+		{
+			MAIN_voidSet_CLCD_Display(Local_structBall,Local_structBlock);
+
+			Local_structBall.Local_u8Xpos++;
+			Local_structBall.Local_u8Ypos = rand() % 2;
+
+			SW_u8GetState(&Local_SW0,&Local_u8SWstatus);
+
+			if(Local_u8SWstatus == DIO_u8_SWITCH_PRESSED)
+				Local_structBlock.Local_u8Ypos = 1;
+			else
+				Local_structBlock.Local_u8Ypos = 0;
+
+			_delay_ms(200);
+		}
+		CLCD_voidClearDisplay();
+		CLCD_voidSendSpecialChatacter(Local_structBlock.Local_u8Shape,1,Local_structBlock.Local_u8Xpos,Local_structBlock.Local_u8Ypos);
+		DIO_u8SetPinValue(DIO_u8_PORTA,DIO_u8_PIN2,DIO_u8_PIN_HIGH);
+		_delay_ms(50);
+		DIO_u8SetPinValue(DIO_u8_PORTA,DIO_u8_PIN2,DIO_u8_PIN_LOW);
+
+	}
+	else
+	{
+		CLCD_voidClearDisplay();
+		CLCD_sendString("YOU LOSE");
+		Global_u8Flag == 1;
+		DIO_u8SetPinValue(DIO_u8_PORTA,DIO_u8_PIN0,DIO_u8_PIN_HIGH);
+		_delay_ms(50);
+		DIO_u8SetPinValue(DIO_u8_PORTA,DIO_u8_PIN0,DIO_u8_PIN_LOW);
+		_delay_ms(3000);
+
+	}
+}
+void main()
+{
+	SW_Config_t Local_SW0 = {DIO_u8_PORTB,DIO_u8_PIN0,DIO_u8_PULL_DOWN};
+	uint8 Local_u8SWstatus;
+
+
+	PORT_voidInit();
+
+	CLCD_voidInit();
+
+	GIE_voidEnableGlobal();
+
+	EXTI_voidInit();
+
+	EXTI_u8SetCallBack(EXTI_u8_INT0,&MAIN_voidWIN);
+	EXTI_u8SetCallBack(EXTI_u8_INT1,&MAIN_voidLOSE);
+	EXTI_u8SetCallBack(EXTI_u8_INT2,&MAIN_voidBALL);
+
+	MAIN_voidMoveBall();
+
+	Shape Local_structBlock = {0,0,{0B00011,0B00011,0B00011,0B00011,0B00011,0B00011,0B00011,0B00011}};
+	while(Global_u8Flag == 0)
+	{
+		CLCD_voidClearDisplay();
+		CLCD_voidSendSpecialChatacter(Local_structBlock.Local_u8Shape,1,Local_structBlock.Local_u8Xpos,Local_structBlock.Local_u8Ypos);
+
+		SW_u8GetState(&Local_SW0,&Local_u8SWstatus);
+		if(Local_u8SWstatus == DIO_u8_SWITCH_PRESSED)
+			Local_structBlock.Local_u8Ypos = 1;
+		else
+			Local_structBlock.Local_u8Ypos = 0;
+
+		_delay_ms(250);
+
+	}
+}

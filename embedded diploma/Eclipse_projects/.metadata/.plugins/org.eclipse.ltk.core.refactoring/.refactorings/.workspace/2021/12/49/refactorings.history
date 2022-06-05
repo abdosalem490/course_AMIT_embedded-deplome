@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete 5 resources" deleteContents="false" description="Delete 5 resources" element1="/DIO/I2C_config.h" element2="/DIO/I2C_interface.h" element3="/DIO/I2C_private.h" element4="/DIO/I2C_prog.c" element5="/DIO/I2C_reg.h" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="5" stamp="1638643316347"/>
+</session>

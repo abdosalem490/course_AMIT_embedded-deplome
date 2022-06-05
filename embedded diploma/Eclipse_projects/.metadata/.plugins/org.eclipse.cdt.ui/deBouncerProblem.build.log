@@ -1,0 +1,20 @@
+22:18:44 **** Incremental Build of configuration Debug for project deBouncerProblem ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega32 deBouncerProblem.elf
+AVR Memory Usage
+----------------
+Device: atmega32
+
+Program:     534 bytes (1.6% Full)
+(.text + .data + .bootloader)
+
+Data:          0 bytes (0.0% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+
+22:18:44 Build Finished (took 137ms)
+
